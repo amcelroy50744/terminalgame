@@ -1,19 +1,20 @@
 var rs = require('readline-sync');
-const ship = {
-    'carrier': 5,
-    'battleship': 4,
-    'cruiser': 3,
-    'submarine': 3,
-    'destroyer': 2
-}
+const carrier = 5;
+const battleship = 4;
+const cruiser = 3;
+const submarine = 3;
+const destroyer = 2;
+let enemyLocations = {};
+
 
 while (true){
     var startGame = rs.keyInPause(' Press any key to start the game. ')
     var size = 10;
-    var myShips = 2;
-    var enemyShips = 2;
+    var myShips = 17;
+    var enemyShips = 17;
     var myGrid = createGrid(size);
     var enemyGrid = createGrid(size);
+    var direction;
     var abcKey = [
     'a',
     'b',
@@ -26,14 +27,27 @@ while (true){
     'i',
     'j'
 ];
-for (let i = 0; i <= myShips; i++) {
+ for (let i = 0; i < 1; i++) {
     var x = getRandomInt(size);
     var y = getRandomInt(size);
-    placeCharacter(x, y, 'S', myGrid);
-    placeCharacter(x, y, 'S', enemyGrid);
-}
-printGrid(enemyGrid, true);
+
+   placeShip(x, y, "r", myGrid, carrier, direction);
+   placeShip(x, y, "b", myGrid, battleship, direction);
+   placeShip(x, y, "c", myGrid, cruiser, direction);
+   placeShip(x, y, "s", myGrid, submarine, direction);
+   placeShip(x, y, "d", myGrid, destroyer, direction);
+   
+   placeShip(x, y, "0", enemyGrid, carrier, direction);
+   placeShip(x, y, "0", enemyGrid, battleship, direction);
+   placeShip(x, y, "0", enemyGrid, cruiser, direction);
+   placeShip(x, y, "0", enemyGrid, submarine, direction);
+   placeShip(x, y, "0", enemyGrid, destroyer, direction);
+   
+
+} 
+printGrid(enemyGrid);
 printGrid(myGrid);
+
 
 while (enemyShips > 0 && myShips > 0) {
     let coordinate = rs.question("Enter a location to strike ie 'A2' ");
@@ -48,7 +62,7 @@ while (enemyShips > 0 && myShips > 0) {
     if ( attack(x, y, enemyGrid)) {
         enemyShips --;
     }
-    printGrid(enemyGrid, true);
+    printGrid(enemyGrid);
     drawBreak();
     printGrid(myGrid);
     drawBreak();
@@ -93,26 +107,12 @@ function createHeaders(size) {
     return result
 }
 
-function placeCharacter( x, y, c, grid, direction, ship) {
-    if ( direction === 'right') {
-        for (let i = 0; i < ship.size; i++) {
-            board[y] [x + i ] = c;
-
-            grid = ( `${x + i} -${y}`);
-        }
-    } else if (direction === "left") {
-        board[y] [x - 1] = c;
-
-        grid = (`${x - i}-{y}`);
-    }
-}
-
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
 }
 
 function attack(x, y, grid) {
-    if (grid[y][x] == '0') {
+    if (grid[y][x] == 'S') {
         grid[y][x] = '!';
         console.log('Hit. You have sunk a battleship. 1 ship remaining.');
         return true  
@@ -127,52 +127,37 @@ function attack(x, y, grid) {
 }
 
 function drawBreak() {
-    console.log('---------------');   
+    console.log('-----------------------------------------------------');   
 }
 
-function placeRandomCharacter(grid, size, ship) {
-    let didPlace = false; 
-    let directionString;
-    let valid;
-    while(!didPlace) {
-        let x = getRandomInt(max);
-        let y = getRandomInt(max);
-        [valid, directionString] = this.setDirection(x, y, ship);
-
-        if(valid) {
-            this.placeCharacter(x, y, "S", grid, directionString, ship);
-            didPlace = true;
-        }
-    }
-}
-
-function setDirection(column, row, ship){
-    let valid = false;
-    let direction = Math.floor(Math.random() * 4) + 1;
-    let directionString = "";
-
-    if(direction === 1) {
-        for (let index = 0; index < ship.size; index++) {
-            if(
-                column + index >= this.myGrid.length ||
-                this.grid[row][column + index] === "S" ||
-                this.grid[row][column + index] === undefined
-            ){
-                return [valid, directionString];
+function placeShip(x, y, c, grid, ship, direction) {
+         x = getRandomInt(size);
+         y = getRandomInt(size);
+        direction = getRandomInt(4);
+         if( y + ship < grid.length
+             || x + ship < grid.length
+             ||y - ship > 0
+             || x - ship > 0){
+         for (let index = 0; index < ship; index++){
+         if (direction === 1) {
+            for (let i = 0; i < ship; i++){
+                grid[y][x + i] = c;
             }
-        }
-        valid = true;
-        directionString = "right";
-        return [valid, directionString];
-    }else if (direction === 2) {
-        for (let index = 0; index < ship.size; index++) {
-            if (
-                column - index < 0 ||
-                this.grid[row][column + index] === "S" ||
-                this.grid[row][column + index] === undefined
-            ){
-                return [valid, directionString];
+          }else if ( direction === 2) {
+            for (let i = 0; i < ship; i++) {
+                grid[y][x - i ] = c; 
             }
+          }else if ( direction === 3) {
+            for (let i = 0; i < ship; i++) {
+                grid[y + 1 ][x] = c; 
+            }
+          }else if (direction === 4){
+            for (let i = 0; i < ship; i++){
+                grid[y - 1][x] = c;
+            }
+          }
         }
-    }
+}else{ return placeShip(x, y, c, grid, ship, direction)}
 }
+
+

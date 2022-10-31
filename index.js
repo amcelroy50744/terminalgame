@@ -82,17 +82,6 @@ function createHeaders(size) {
 function placeCharacter( x, y, c, grid) {
     grid[y][x] = c;
 }
-// function placeRandomCharacter(c, grid, max) {
-//     let didPlace = false; 
-//     while(!didPlace) {
-//         let x = getRandomInt(max);
-//         let y = getRandomInt(max);
-//         if(!enemyLocations['${x}-${y}'])
-//         placeCharacter(x, y, c, grid);
-//         didPlace = true;
-//         enemyLocations['${x}-${y}'] = true;
-//     }
-// }
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));

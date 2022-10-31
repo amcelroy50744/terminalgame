@@ -177,12 +177,12 @@ function myBattleship(ship,c, grid){
         let directionString = "";
 
         if (direction === 1 ) {
-
+                //right
             for (let index = 0; index < ship.size; index++) {
                 if (
-                    column + index >= myGrid.length ||
-                    myGrid[y][column + index] === "S" ||
-                    myGrid[y][column + index] === undefined 
+                    column + index >= grid.length ||
+                    grid[row][column + index] === "S" ||
+                    grid[row][column + index] === undefined 
                 ) {
                     return [ valid, directionString];
                 }
@@ -191,12 +191,12 @@ function myBattleship(ship,c, grid){
             directionString = "right";
             return [valid, directionString];
         }else if (direction === 2) {
-            
+            // left
             for (let index = 0; index < ship.size; index++) {
                 if (
                     column - index < 0 ||
-                    myGrid[y][column - index] === "S" ||
-                    myGrid[y][column - index] === undefined 
+                    grid[y][column - index] === "S" ||
+                    grid[y][column - index] === undefined 
                 ){
                     return [valid, directionString];
                 }
